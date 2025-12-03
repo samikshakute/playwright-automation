@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test'
+import { test, request } from '@playwright/test'
 import { APIUtils } from './utils/APIUtils.spec'
 
 const loginPayload = { userEmail: "samikshak@gmail.com", userPassword: "Sam@12345" }; // 2. Define Payload

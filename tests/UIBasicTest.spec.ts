@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test('Browser context playwright test', async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
+  page.route('**/*.{jpg,png,jpeg}', route => route.abort());
   await page.goto('https://playwright.dev');
   console.log(await page.title());
 });
@@ -27,7 +28,7 @@ test('Valid login test', async ({ page }) => {
 test('failed login shows error message', async ({ page }) => {
   const userName = page.locator('#username');
   const password = page.locator('[id="password"]');
-  const submitButton = await page.locator('.btn.btn-info.btn-md');
+  const submitButton = page.locator('.btn.btn-info.btn-md');
   await page.goto('https://rahulshettyacademy.com/loginpagePractise/');
   await userName.fill('kjdhfksd');
   await password.fill("learning");
@@ -36,7 +37,9 @@ test('failed login shows error message', async ({ page }) => {
   await expect(page.locator('[style*="block"]')).toContainText("Incorrect");
 });
 
-test('Assignment', async ({ page }) => {
+test.only('Assignment', async ({ page }) => {
+  page.on('request', request => console.log(request.url()));
+  page.on('response', response => console.log(response.url(), response.status()));
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
   const userName = page.locator("#userEmail");
   const password = page.locator("#userPassword");
@@ -49,6 +52,7 @@ test('Assignment', async ({ page }) => {
   await page.waitForLoadState('networkidle'); // This can be flaky
   // Best Option - wait for the locator itself
   await page.locator(".card-body b").first().waitFor();
+
   console.log(await productText.first().textContent());
   console.log(await productText.allTextContents());
 
